@@ -34,7 +34,19 @@ jobs:
           dotnet restore StronglyTypedIds.sln
           dotnet build StronglyTypedIds.sln --configuration Release --no-restore
           dotnet pack ErginWebDev.StronglyTypedIds/ErginWebDev.StronglyTypedIds.csproj --configuration Release --no-build --output ../nupkg
+      
+      # 4️⃣ NuGet Login
+      - name: NuGet Login
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: my-nuget-username
 
       # 6️⃣ Trusted Publishing ile otomatik NuGet yayınlama
       - name: Publish to NuGet.org (Trusted Publishing)
-        run: dotnet nuget push "./nupkg/*.nupkg" --source https://api.nuget.org/v3/index.json --skip-duplicate
+        run: dotnet nuget push ./bin/*.nupkg --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://www.nuget.org/api/v2/package
+
+
+ 
+
+ 
