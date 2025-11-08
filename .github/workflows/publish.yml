@@ -12,29 +12,26 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     environment: production
-    strategy:
-      matrix:
-        dotnet-version: [8.0.x, 9.0.x]
 
     steps:
       # 1️⃣ Repo'yu al
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2️⃣ .NET SDK'yı kur
+      # 2️⃣ .NET SDK'yı kur (9.0 hem net8.0 hem net9.0 derler)
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{ matrix.dotnet-version }}
+          dotnet-version: 9.0.x
 
-      # 3️⃣ Restore, Build ve Pack (tek adımda)
+      # 3️⃣ Restore, Build ve Pack
       - name: Build and Pack
         run: |
           cd src
           dotnet restore StronglyTypedIds.sln
           dotnet build StronglyTypedIds.sln --configuration Release --no-restore
           dotnet pack ErginWebDev.StronglyTypedIds/ErginWebDev.StronglyTypedIds.csproj --configuration Release --no-build --output ../nupkg
-      
+
       # 4️⃣ NuGet Login
       - name: NuGet Login
         uses: NuGet/login@v1
@@ -42,9 +39,9 @@ jobs:
         with:
           user: ErginTIRAVOGLU
 
-      # 6️⃣ Trusted Publishing ile otomatik NuGet yayınlama
-      - name: Publish to NuGet.org (Trusted Publishing)
-        run: dotnet nuget push ./nupkg/*.nupkg --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://www.nuget.org/api/v2/package
+      # 5️⃣ NuGet'e yayınla
+      - name: Publish to NuGet.org
+        run: dotnet nuget push ./nupkg/*.nupkg --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
 
 
  
