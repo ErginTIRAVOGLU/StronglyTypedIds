@@ -27,17 +27,13 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
 
-      # 3️⃣ Paketleri geri yükle
-      - name: Restore dependencies
-        run: dotnet restore src/StronglyTypedIds.sln
-
-      # 4️⃣ Build et (Release modu)
-      - name: Build project
-        run: dotnet build src/StronglyTypedIds.sln --configuration Release --no-restore
-
-      # 5️⃣ NuGet paketi oluştur
-      - name: Pack NuGet package
-        run: dotnet pack src/ErginWebDev.StronglyTypedIds/ErginWebDev.StronglyTypedIds.csproj --configuration Release --no-build --output ./nupkg
+      # 3️⃣ Restore, Build ve Pack (tek adımda)
+      - name: Build and Pack
+        run: |
+          cd src
+          dotnet restore StronglyTypedIds.sln
+          dotnet build StronglyTypedIds.sln --configuration Release --no-restore
+          dotnet pack ErginWebDev.StronglyTypedIds/ErginWebDev.StronglyTypedIds.csproj --configuration Release --no-build --output ../nupkg
 
       # 6️⃣ Trusted Publishing ile otomatik NuGet yayınlama
       - name: Publish to NuGet.org (Trusted Publishing)
