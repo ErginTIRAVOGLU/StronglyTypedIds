@@ -30,14 +30,17 @@ jobs:
       # 3️⃣ Paketleri geri yükle
       - name: Restore dependencies
         run: dotnet restore
+        working-directory: ./src
 
       # 4️⃣ Build et (Release modu)
       - name: Build project
         run: dotnet build --configuration Release --no-restore
+        working-directory: ./src
 
       # 5️⃣ NuGet paketi oluştur
       - name: Pack NuGet package
-        run: dotnet pack --configuration Release --no-build --output ./nupkg
+        run: dotnet pack --configuration Release --no-build --output ../nupkg
+        working-directory: ./src
 
       # 6️⃣ Trusted Publishing ile otomatik NuGet yayınlama
       - name: Publish to NuGet.org (Trusted Publishing)
