@@ -40,7 +40,7 @@ jobs:
         uses: NuGet/login@v1
         id: login
         with:
-          user: my-nuget-username
+          user: ErginTIRAVOGLU
 
       # 6️⃣ Trusted Publishing ile otomatik NuGet yayınlama
       - name: Publish to NuGet.org (Trusted Publishing)
